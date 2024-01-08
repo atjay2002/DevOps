@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Include Leaflet CSS and JavaScript -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <style>
+        #map { height: 500px; }
+    </style>
+</head>
+<body>
+    <div>
+        <input type="text" id="searchInput" placeholder="Enter location name">
+        <button onclick="searchLocation()">Search</button>
+    </div>
+    <div id="map" style="height: 500px;"></div>
+
+    <script>
+        var map = L.map("map").setView([42.0908, -64.12583333333335], 12);
+
+        // Add OpenStreetMap tiles as the base layer
+        L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            attribution: "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors"
+        }).addTo(map);
+
+        // Define markers with popup content
+        var markers = [
+            { "lat": 40.7128, "lon": -74.006, "popup": "Manufacturing - ABC Industries<br>123 Main Street, City" },
+            { "lat": 34.0522, "lon": -118.2437, "popup": "Engineering - XYZ Corporation<br>456 Elm Street, Town" },
+            { "lat": 51.5074, "lon": -0.1278, "popup": "Technology - DEF Enterprises<br>789 Oak Avenue, Village" },
+            { "lat": 10.995979460800065, "lon": 78.78054455031148, "popup": "MAM College of Engineering and Technology - DEF Enterprises<br>789 Oak Avenue, Village" },
+            { "lat": 11.056001231135884, "lon": 78.80006945664176, "popup": "GK Industrial Park - GK Enterprises<br>On NH 45, Siruganur, Trichy, Tamil Nadu 621105" },
+            { "lat": 10.790937146867423, "lon": 78.80201158338274, "popup": "SIDCO Industrial Estate - SIDCO-Thuvakudi<br>QR45+94Q, Tamil Nadu 620015" },
+            
+        ];
+
+        // Add markers to the map
+        markers.forEach(function(marker) {
+            L.marker([marker.lat, marker.lon]).addTo(map).bindPopup(marker.popup);
+        });
+
+        // Function to search for a location
+        function searchLocation() {
+            var searchTerm = document.getElementById("searchInput").value.toLowerCase();
+            var found = false;
+
+            markers.forEach(function(marker) {
+                if (marker.popup.toLowerCase().includes(searchTerm)) {
+                    map.setView([marker.lat, marker.lon], 15);
+                    L.marker([marker.lat, marker.lon]).addTo(map).bindPopup(marker.popup).openPopup();
+                    found = true;
+                }
+            });
+
+            if (!found) {
+                alert("Location not found!");
+            }
+        }
+    </script>
+</body>
+</html>
